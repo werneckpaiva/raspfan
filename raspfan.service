@@ -1,0 +1,13 @@
+[Unit]
+Description=Raspfan
+
+[Service]
+ExecStart=raspfan -g 0 -t 58 -f 52 -s 30 -v
+WorkingDirectory=/usr/local/bin
+StandardOutput=journal
+StandardError=journal
+Restart=always
+User=root
+
+[Install]
+WantedBy=multi-user.target

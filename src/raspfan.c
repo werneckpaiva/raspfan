@@ -27,6 +27,7 @@ float getTemp(){
     return millideg / 1000;
 }
 
+char isFanActive=0;
 void controlFan(TypeOptions options){
   if (options.verbose > 0){
      printf("Fan control\n");
@@ -38,14 +39,16 @@ void controlFan(TypeOptions options){
   pinMode (options.gpioPin, OUTPUT);
   for(;;){
     float temp = getTemp();
-    if (options.verbose > 0){
-      printf("Current temp: %.2f, On: %.2f, Off: %.2f\n", temp, options.tempOnThreshold, options.tempOffThreshold);
-    }
     if (temp >= options.tempOnThreshold){
-       digitalWrite(options.gpioPin, 1);
+       isFanActive = 1;
     } else if (temp < options.tempOffThreshold){
-       digitalWrite(options.gpioPin, 0);
+       isFanActive = 0;
     }
+
+    if (options.verbose > 0){
+      printf("Current temp: %.2f, On: %.2f, Off: %.2f %s\n", temp, options.tempOnThreshold, options.tempOffThreshold, (isFanActive==1)?"(Active)":"");
+    }
+    digitalWrite(options.gpioPin, isFanActive);
     delay(options.sleepInterval * 1000);
   }
 }
